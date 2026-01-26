@@ -1,4 +1,5 @@
 use clap::{ArgGroup, Args, Parser, Subcommand};
+use clap_complete::Shell;
 use reqwest::Url;
 
 use crate::dictionary::monkeytype;
@@ -19,6 +20,10 @@ pub enum Command {
 
         #[command(flatten)]
         dictionary: DictionarySource,
+    },
+
+    Completions {
+        shell: Shell,
     },
 }
 

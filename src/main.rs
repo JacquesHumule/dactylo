@@ -2,7 +2,10 @@ mod cli;
 mod dictionary;
 mod typing_test;
 
-use clap::Parser;
+use std::io;
+
+use clap::{CommandFactory, Parser};
+use clap_complete::generate;
 use crossterm::event::{Event, EventStream, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
     DefaultTerminal, Frame,
@@ -20,6 +23,12 @@ use crate::{
 async fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
     let cli = Cli::parse();
+
+    if let Command::Completions { shell } = cli.command {
+        generate(shell, &mut Cli::command(), "dactylo", &mut io::stdout());
+        return Ok(());
+    }
+
     let terminal = ratatui::init();
     let result = App::new(cli).await?.run(terminal).await;
     ratatui::restore();
@@ -56,6 +65,9 @@ impl App {
                     DictionarySourceEnum::MonkeytypeUrl(u) => monkeytype::fetch(u).await?,
                 };
                 AppState::TypingTest(TypingTest::new(number, dict))
+            }
+            _ => {
+                color_eyre::eyre::bail!("Invalid command")
             }
         };
 
