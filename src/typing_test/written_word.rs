@@ -41,7 +41,7 @@ pub enum WordTail<'a> {
 }
 
 impl WrittenWord {
-    pub fn new(expected: String) -> Self {
+    pub const fn new(expected: String) -> Self {
         Self {
             // start_time: chrono::Local::now(),
             // end_time: None,
@@ -82,7 +82,7 @@ impl WrittenWord {
         });
     }
 
-    pub fn is_empty(&self) -> bool {
+    pub const fn is_empty(&self) -> bool {
         self.written.is_empty()
     }
 
@@ -99,7 +99,7 @@ impl WrittenWord {
         &self.written
     }
 
-    pub fn keystrokes(&self) -> &Vec<Keystroke> {
+    pub const fn keystrokes(&self) -> &Vec<Keystroke> {
         &self.keystrokes
     }
 

@@ -10,6 +10,7 @@ use crossterm::event::{Event, EventStream, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
     DefaultTerminal, Frame,
     macros::{line, span, text},
+    widgets::{Block, Paragraph},
 };
 use tokio_stream::StreamExt;
 
@@ -64,7 +65,7 @@ impl App {
                     }
                     DictionarySourceEnum::MonkeytypeUrl(u) => monkeytype::fetch(u).await?,
                 };
-                AppState::TypingTest(TypingTest::new(number, dict))
+                AppState::TypingTest(TypingTest::new(number, &dict))
             }
             _ => {
                 color_eyre::eyre::bail!("Invalid command")
@@ -105,15 +106,15 @@ impl App {
                 frame.set_cursor_position(pos);
             }
             AppState::ShowStats(finished) => {
-                frame.render_widget(
-                    text![
-                        line![span!("wpm {}", finished.wpm().round())],
-                        line![span!("raw wpm {}", finished.raw_wpm().round())],
-                        line![span!("acc {}%", (finished.accuracy() * 100.0).round())],
-                        line![span!("chars {}", finished.char_stats())],
-                    ],
-                    frame.area(),
-                );
+                let paragraph = Paragraph::new(text![
+                    line![span!("wpm {}", finished.wpm().round())],
+                    line![span!("raw wpm {}", finished.raw_wpm().round())],
+                    line![span!("acc {}%", (finished.accuracy() * 100.0).round())],
+                    line![span!("chars {}", finished.char_stats())],
+                ])
+                .block(Block::bordered().title("results"));
+
+                frame.render_widget(paragraph, frame.area());
             }
             _ => {}
         }
@@ -126,8 +127,6 @@ impl App {
         if let Some(Ok(evt)) = event {
             match evt {
                 Event::Key(key) if key.kind == KeyEventKind::Press => self.on_key_event(key),
-                Event::Mouse(_) => {}
-                Event::Resize(_, _) => {}
                 _ => {}
             }
         }
@@ -148,7 +147,7 @@ impl App {
     }
 
     /// Set running to false to quit the application.
-    fn quit(&mut self) {
+    const fn quit(&mut self) {
         self.running = false;
     }
 }

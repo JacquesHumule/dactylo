@@ -30,12 +30,12 @@ pub enum Command {
 #[derive(Debug, Clone, Args)]
 #[group(required = false, multiple = false)]
 pub struct DictionarySource {
-    /// Monkeytype language url (e.g.: https://monkeytype.com/languages/english.json)
+    /// Monkeytype language url (e.g.: <https://monkeytype.com/languages/english.json>)
     #[arg(long = "mt-url")]
     pub monkeytype_url: Option<Url>,
     /// Monkeytype language name (e.g.: english)
     #[arg(long = "mt-lang", default_value = "english")]
-    pub monkeytype_lang: Option<monkeytype::Languages>,
+    pub monkeytype_lang: Option<monkeytype::languages::Languages>,
 }
 
 impl DictionarySource {
@@ -45,12 +45,12 @@ impl DictionarySource {
         } else if let Some(monkeytype_lang) = &self.monkeytype_lang {
             DictionarySourceEnum::MonkeytypeLang(monkeytype_lang.clone())
         } else {
-            DictionarySourceEnum::MonkeytypeLang(monkeytype::Languages::English)
+            DictionarySourceEnum::MonkeytypeLang(monkeytype::languages::Languages::English)
         }
     }
 }
 
 pub enum DictionarySourceEnum {
     MonkeytypeUrl(Url),
-    MonkeytypeLang(monkeytype::Languages),
+    MonkeytypeLang(monkeytype::languages::Languages),
 }

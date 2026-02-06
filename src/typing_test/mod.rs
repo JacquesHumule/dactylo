@@ -26,7 +26,7 @@ pub struct TypingTest {
 }
 
 impl TypingTest {
-    pub fn new(size: usize, dictionary: Dictionary) -> Self {
+    pub fn new(size: usize, dictionary: &Dictionary) -> Self {
         let mut word_queue: VecDeque<_> = dictionary
             .words
             .choose_iter(&mut rand::rng())
@@ -116,7 +116,7 @@ impl TypingTest {
         }
     }
 
-    pub fn widget_two_lines(&self) -> TwoLines<'_> {
+    pub const fn widget_two_lines(&self) -> TwoLines<'_> {
         TwoLines { game: self }
     }
 
@@ -124,7 +124,7 @@ impl TypingTest {
         if self.current_word.is_none() {
             Some(TestStats {
                 start_time: self.start_time,
-                end_time: self.end_time.unwrap_or(chrono::Local::now()),
+                end_time: self.end_time.unwrap_or_else(chrono::Local::now),
                 completed_word_list: self.completed_word_list.clone(),
             })
         } else {

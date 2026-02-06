@@ -154,10 +154,8 @@ impl TwoLines<'_> {
                 line.push_span(span!(NOT_WRITTEN_STYLE; "{}", w));
                 line.push_span(span!(" "));
             }
-            line.spans.pop();
-        } else {
-            line.spans.pop();
         }
+        line.spans.pop();
 
         line.render(area, buf);
     }

@@ -1,30 +1,7 @@
-use clap::ValueEnum;
-use reqwest::{IntoUrl, Url};
+pub mod languages;
+
+use reqwest::IntoUrl;
 use serde::Deserialize;
-
-#[derive(Debug, Clone, ValueEnum)]
-pub enum Languages {
-    French,
-    English,
-}
-
-impl Languages {
-    pub fn as_str(&self) -> &'static str {
-        use Languages::*;
-        match self {
-            English => "english",
-            French => "french",
-        }
-    }
-
-    pub fn to_url(&self) -> Url {
-        Url::parse(&format!(
-            "https://www.monkeytype.com/languages/{}.json",
-            self.as_str()
-        ))
-        .unwrap()
-    }
-}
 
 #[derive(Debug, Clone, Deserialize)]
 struct MonkeyTypeDictionary {
